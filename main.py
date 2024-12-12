@@ -25,10 +25,15 @@ rates_data_high_risk = {
 def create_dataframe(data):
     return pd.DataFrame(data)
 
-def main():
-    st.title("Consulta de Tasas de Interés")
+def calcular_cuota(monto, tasa_anual, plazo):
+    tasa_mensual = tasa_anual / 100 / 12
+    cuota = monto * (tasa_mensual * (1 + tasa_mensual) ** plazo) / ((1 + tasa_mensual) ** plazo - 1)
+    return cuota
 
-    # Elección del tipo de tabla
+def main():
+    st.title("Calculadora de Cuotas de Préstamo")
+
+    # Elección del tipo de cliente
     tabla_tipo = st.radio(
         "Selecciona el tipo de cliente:",
         ("Clientes estándar", "Clientes hasta $400,000 y hasta 600 puntos")
@@ -39,22 +44,21 @@ def main():
     else:
         data = create_dataframe(rates_data_high_risk)
 
-    # Mostrar tabla
-    st.subheader(f"Tabla de tasas: {tabla_tipo}")
-    st.dataframe(data)
-
-    # Búsqueda interactiva
+    # Selección del año
     año_seleccionado = st.selectbox("Selecciona el año para consultar:", data["Año"].unique())
 
     if año_seleccionado:
         fila = data[data["Año"] == año_seleccionado]
-        st.write(f"### Tasas para {año_seleccionado}")
-        st.write(f"Tasa fija hasta 6 meses: {fila['TASA FIJA HASTA 6 MESES'].values[0]}%")
-        st.write(f"Tasa fija hasta 2 años: {fila['TASA FIJA HASTA 2 AÑOS'].values[0]}%")
-        st.write(f"Tasa fija hasta 3 años: {fila['TASA FIJA HASTA 3 AÑOS'].values[0]}%")
-        st.write(f"Plazo máximo: {fila['Plazo Máximo'].values[0]} meses")
-        st.write(f"Porcentaje de referencia tasación: {fila['Porcentaje de Referencia Tasación'].values[0]}%")
+
+        # Entrada de datos
+        monto = st.number_input("Ingresa el monto del préstamo:", min_value=0.0, step=1000.0)
+        plazo = st.number_input("Ingresa el plazo en meses:", min_value=1, step=1)
+
+        # Cálculo de la cuota
+        if monto > 0 and plazo > 0:
+            tasa_anual = fila["TASA FIJA HASTA 3 AÑOS"].values[0]
+            cuota = calcular_cuota(monto, tasa_anual, plazo)
+            st.write(f"### Cuota mensual estimada: ${cuota:.2f}")
 
 if __name__ == "__main__":
     main()
-
