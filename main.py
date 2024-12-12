@@ -57,11 +57,12 @@ def main():
 
     if año_seleccionado:
         fila = data[data["Año"] == año_seleccionado]
+        plazo_maximo = int(fila["Plazo Máximo"].values[0])
 
         # Entrada de datos
         monto = st.number_input("Ingresa el monto del préstamo:", min_value=0.0, step=1000.0)
         plazo_seleccionado = st.selectbox("Selecciona el plazo:", ["6 MESES", "2 AÑOS", "3 AÑOS"])
-        e = st.number_input("Ingresa el plazo del préstamo en meses:", min_value=1, step=1)
+        e = st.number_input(f"Ingresa el plazo del préstamo en meses (máximo {plazo_maximo}):", min_value=1, max_value=plazo_maximo, step=1)
         gracia = st.selectbox("Selecciona el periodo de gracia en meses:", [0, 1, 2])
 
         # Mapear plazo a meses y columna correcta
