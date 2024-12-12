@@ -75,8 +75,7 @@ def main():
         if monto > 0:
             tasa_anual = fila[columna_tasa].values[0]
             cuota_final = calcular_cuota_con_gracia(monto, tasa_anual, plazo, e, gracia)
-            st.write(f"### Tasa de Interés Anual: {tasa_anual:.2f}%")
-            st.write(f"### Cuota mensual estimada con gracia: ${cuota_final:.2f}")
+            st.write(f"### Cuota mensual estimada con gracia: ${cuota_final:,.2f}")
 
 if __name__ == "__main__":
     main()
