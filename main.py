@@ -52,15 +52,17 @@ def main():
 
         # Entrada de datos
         monto = st.number_input("Ingresa el monto del préstamo:", min_value=0.0, step=1000.0)
-        plazo_seleccionado = st.selectbox("Selecciona el plazo:", ["6 meses", "2 años", "3 años"])
+        plazo_seleccionado = st.selectbox("Selecciona el plazo:", ["6 MESES", "2 AÑOS", "3 AÑOS"])
 
-        # Mapear plazo a meses
-        plazo_map = {"6 meses": 6, "2 años": 24, "3 años": 36}
+        # Mapear plazo a meses y columna correcta
+        plazo_map = {"6 MESES": 6, "2 AÑOS": 24, "3 AÑOS": 36}
+        columna_map = {"6 MESES": "TASA FIJA HASTA 6 MESES", "2 AÑOS": "TASA FIJA HASTA 2 AÑOS", "3 AÑOS": "TASA FIJA HASTA 3 AÑOS"}
         plazo = plazo_map[plazo_seleccionado]
+        columna_tasa = columna_map[plazo_seleccionado]
 
         # Cálculo de la cuota
         if monto > 0:
-            tasa_anual = fila[f"TASA FIJA HASTA {plazo_seleccionado}"].values[0]
+            tasa_anual = fila[columna_tasa].values[0]
             cuota = calcular_cuota(monto, tasa_anual, plazo)
             st.write(f"### Tasa de Interés Anual: {tasa_anual:.2f}%")
             st.write(f"### Cuota mensual estimada: ${cuota:.2f}")
