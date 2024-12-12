@@ -61,7 +61,7 @@ def main():
         # Entrada de datos
         monto = st.number_input("Ingresa el monto del préstamo:", min_value=0.0, step=1000.0)
         plazo_seleccionado = st.selectbox("Selecciona el plazo:", ["6 MESES", "2 AÑOS", "3 AÑOS"])
-        gracia = st.number_input("Ingresa el periodo de gracia en meses:", min_value=0, step=1)
+        gracia = st.selectbox("Selecciona el periodo de gracia en meses:", [0, 1, 2])
 
         # Mapear plazo a meses y columna correcta
         plazo_map = {"6 MESES": 6, "2 AÑOS": 24, "3 AÑOS": 36}
@@ -78,4 +78,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
