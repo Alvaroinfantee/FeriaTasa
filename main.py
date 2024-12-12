@@ -25,15 +25,15 @@ rates_data_high_risk = {
 def create_dataframe(data):
     return pd.DataFrame(data)
 
-def calcular_cuota_con_gracia(monto, tasa_anual, plazo, gracia):
+def calcular_cuota_con_gracia(monto, tasa_anual, plazo, e, gracia):
     tasa_mensual = tasa_anual / 100 / 12
     interes = monto * tasa_mensual
-    cuota = monto * (tasa_mensual * (1 + tasa_mensual) ** plazo) / ((1 + tasa_mensual) ** plazo - 1)
+    cuota = monto * (tasa_mensual * (1 + tasa_mensual) ** e) / ((1 + tasa_mensual) ** e - 1)
 
     if gracia == 0:
         monto_gracia = 0
     else:
-        monto_gracia = (monto * tasa_mensual) / plazo
+        monto_gracia = (monto * tasa_mensual) / e
 
     cuotafinal = cuota + monto_gracia * gracia
     return cuotafinal
@@ -61,6 +61,7 @@ def main():
         # Entrada de datos
         monto = st.number_input("Ingresa el monto del préstamo:", min_value=0.0, step=1000.0)
         plazo_seleccionado = st.selectbox("Selecciona el plazo:", ["6 MESES", "2 AÑOS", "3 AÑOS"])
+        e = st.number_input("Ingresa el plazo del préstamo en meses:", min_value=1, step=1)
         gracia = st.selectbox("Selecciona el periodo de gracia en meses:", [0, 1, 2])
 
         # Mapear plazo a meses y columna correcta
@@ -72,7 +73,7 @@ def main():
         # Cálculo de la cuota
         if monto > 0:
             tasa_anual = fila[columna_tasa].values[0]
-            cuota_final = calcular_cuota_con_gracia(monto, tasa_anual, plazo, gracia)
+            cuota_final = calcular_cuota_con_gracia(monto, tasa_anual, plazo, e, gracia)
             st.write(f"### Tasa de Interés Anual: {tasa_anual:.2f}%")
             st.write(f"### Cuota mensual estimada con gracia: ${cuota_final:.2f}")
 
